@@ -1,0 +1,408 @@
+\documentclass[authoryear,round,12pt]{article}
+\usepackage{fancybox}
+\usepackage{color}
+\usepackage{natbib}
+\usepackage{graphicx}
+\usepackage{setspace}
+\usepackage{amsmath}
+\usepackage{pslatex}
+\setlength{\oddsidemargin}{0pt}
+\setlength{\evensidemargin}{0pt}
+\setlength{\textwidth}{6.5in}
+\setlength{\textheight}{9.2in}
+\setlength{\topmargin}{-0.55in} % pdflatex
+\begin{document}
+
+
+\begin{center}
+{\Large \bf Working notes for creating CCSM3 T31 LGM run}
+
+\medskip
+
+Ian Eisenman, 2005 (eisenman@post.harvard.edu)
+
+\medskip
+
+Thanks to help from Bette Otto-Bliesner, Esther Brady, Bruce Briegleb,
+Cecilia Bitz
+
+\end{center}
+
+\medskip
+
+\noindent This document and all files I edited for this run can be downloaded from my website or obtained by emailing me. They are also available on NCAR mass storage at\\
+\verb+/EISENMAN/working-notes/T31-LGM.tar.gz+\\
+All files are in a directory called T31-LGM/, and paths to files in the directory are mentioned in this document.
+
+\medskip
+
+\section{Introduction}
+
+These are notes I put together while setting up a low resolution CCSM3
+simulation with last glacial maximum (LGM) forcing, which was presented in \citet{Eisenman-Bitz-Tziperman-2007:rain}.  This experiment
+is based closely on a previous high resolution LGM experiment
+\citep{Otto-Bliesner-Brady-Clauzet-et-al-2006:last}, as well as a
+previous low resolution run with 1780 forcing
+\citep{Otto-Bliesner-Tomas-Brady-et-al-2006:climate}. The high
+resolution run uses T42 atmosphere/land and gx1v3 ocean/ice; the low
+resolution runs use T31 atmosphere/land and gx3v5 ocean/ice. At times
+in these notes (e.g., the title) I simply use T31 or T42 to refer to
+the resolution, whether discussing just the ocean or the whole coupled
+run.
+
+Compared to 1780 (the paleoclimate control run), the LGM has different
+sea level (simulated here by changing the coastline but leaving the
+bathymetry otherwise largely unaltered), ice sheets (affecting the
+land topography and surface type), greenhouse gases, and insolation.
+Section \ref{sec:data} describes the process of taking the
+topography/bathymetry and land surface type datasets from the ICE-5G
+reconstruction \citep{Peltier-2004:global} and creating the necessary
+data files for the model. Note that I used some files already created
+for the T42 LGM run. Section \ref{sec:namelists} describes setting up
+the run and making the necessary changes in the namelists.
+
+A document I have found very helpful in this work is ``Procedures for
+Generating Input files for CCSM2'', written by Esther Brady, Steve
+Yeager, Christine Shields, Sam Levis, and Bette Otto-Bliesner. I've
+copied the file to T31-LGM/doc/SetupCCSM3.pdf.
+
+\subsection{Computers}
+
+Although it would be nice to do this all on one computer if it had the
+necessary FORTRAN libraries, the makefiles were configured correctly,
+etc, I ended up using 5 computers for this work: bluesky (AIX),
+tempest (IRIX64), neva (SunOS), poorman (Linux), and my laptop (XP; I
+used it for Matlab). I try to indicate in the notes below which
+computer I used for various jobs. I worked primarily on bluesky and
+copied files to other computers as necessary, ran jobs, and then
+copied the output files back to bluesky.
+
+\section{Creating input data for model}
+\label{sec:data}
+
+\subsection{ATM}
+
+Need to create LGM surface BC (topography). This is contained in the
+...cam2.i...nc init file. I used the T31 1780 run (b30.105) atm init
+file from year 100, changing the topography to be PD plus the
+difference between LGM and PD in the Peltier ICE-5G
+reconstructions. This was all done with the fortran program
+definesurf, in \verb+T31-LGM/atm-definesurf/+. The program is
+described in the README file, and my use of it is documented in
+definesurf.readme. The final product was the file
+\verb+b30.105.cam2.i.0100-01-01.LGM_c050523.nc+
+
+Unfortunately, definesurf doesn't change the variable
+LANDM{\_}COSLAT. I changed this with the ncl program in
+\verb+T31-LGM/atm-definesurf/landmcoslat/+, described in the .readme
+file, and created the new file
+\verb+b30.105.cam2.i.0100-01-01.LGM_c050615.nc+
+
+Note that while I am working primarily on bluesky, definesurf was run
+on tempest and fix{\_}landmcoslat was run on neva, as explained in the
+.readme files.
+
+\subsection{LND}
+
+I used the data already prepared for b30.104, since the land accepts
+high resolution surface-type datasets and interpolates them to T31 at
+the start of the run. The files are described in section
+\ref{sec:namelists}.
+
+\subsection{OCN}
+
+\subsubsection{Bathymetry}
+
+Needed to create ocean bathymetry files:
+
+KMT (bin) file contains depth(lat,lon) measured in number of
+boxes. KMT=0 over land, so this contains the coast.
+
+Region mask (bin) file contains basin(lat,lon), where the basin is an
+integer corresponding to which ocean it is. Negative integers indicate
+marginal seas.
+
+Region ids (text) file contains the names of each numbered basin and
+the location and area over which each marginal sea imposes it's
+salinity balance.
+
+The first two files are created by first zeroing all shallow water and
+making a few corrections based on region mask (``method 1'') to
+approximate LGM ocean starting with PD ocean. This is calculated using
+\verb+T31-LGM/ocn-kmt/makekmtgx3v5.f+. Next, the file is visually
+compared in matlab with the Peltier ICE-5G reconstruction, and ocean
+points are manually selected to be changed to land (``method 2''). The
+matlab routine, \verb+T31-LGM/ocn-kmt/matlab/KMT_gx3v5_compare.m+,
+creates a text file identifying the grid boxes selected. This is read
+by the Fortran program makekmtgx3v5.f, and final versions of the kmt
+and region mask files are created. This entire procedure is described in
+\verb+T31-LGM/ocn-kmt/makekmtgx3v5.readme+.
+
+Next, I examined the locations in the ocean for the marginal sea
+balances and slightly adjusted the ocean target for the Caspian sea in
+\verb+gx3v5_region_ids+; I also re-numbered some of the regions
+because of dried up seas. I saved this altered file as
+\verb+gx3v5_region_ids_LGM+.
+
+\subsubsection{Initial condition}
+
+I also needed to create T-S initial condition based on the climatology
+of b30.104 at a fairly late (i.e., spun up) time in the run. Hence, I
+needed to interpolate from a gx1v3 (netcdf) hist file to gx3v5 (bin)
+init file. I did this with \verb+T31-LGM/ocn-ic/lev2grid.csh+, which
+requires the program regrid (compiled to work on tempest) as well as
+Matlab with the netcdf toolbox (I used my laptop). My usage of the
+program is described in \verb+T31-LGM/ocn-ic/lev2grid.readme+. The
+final product was the file \verb+LGM_jan_ic_gx3v5_Y0290-0299.ieeed+.
+
+\subsection{ICE}
+
+This module just takes the KMT file made for the ocean.
+
+This run, like b30.104, will start from the default sea ice initial
+condition.
+
+\subsection{CPL}
+
+Need to create 4 mapping files:
+
+\begin{verbatim}
+ map_T31_to_gx3LGM_aave_da.nc
+ map_T31_to_gx3LGM_bilin_da.nc
+ map_gx3LGM_to_T31_aave_da.nc
+ map_r5_to_LGMgx3.nc
+\end{verbatim}
+
+The last one, which maps from the runoff grid to the ocean grid, takes
+the longest to make. This appears to be mostly because of smoothing -
+1 runoff point needs to map to many ocean points.
+
+Procedure:
+\begin{description}
+ 
+\item[(1)] Create mapping files between T31 atm and gx3v5 LGM
+  ocean: Use\\
+  \verb+T31-LGM/cpl-mapping/mk_remap.csh+; this script, and my usage
+  of it, are documented in \verb+T31-LGM/cpl-mapping/mk_remap.readme+.
+
+\item[(2)] Correct mapping errors (related to singularities at poles).
+  Uses the idl routine\\
+  \verb+T31-LGM/cpl-mapping/correct_map_errors.run+; my usage is
+  documented in\\
+  \verb+T31-LGM/cpl-mapping/correct_map_errors.readme+. This is done
+  only for aave (i.e., conservative) mappings. The maps I'd created
+  had no errors since 90.0 north was changed to 89.9999 in
+  T31\_040122.nc.
+
+\item[(3)] Create initial map from runoff grid to gx3v5 LGM ocean:
+  0.5x0.5 runoff grid to gx3v5 LGM ocean grid mapping is created with
+  \verb+T31-LGM/cpl-mapping/mk_runoff_remap.csh+; usage is explained
+  in \verb+T31-LGM/cpl-mapping/mk_runoff_remap.readme+.
+
+\item[(4)] Smooth runoff map (this is most computationally expensive
+  step): Need to (a) correct, (b) smooth, and (c) check map. The
+  smoothing is to avoid making sea surface salinity get too perturbed
+  in a single box. This is all done in one fell swoop in a FORTRAN
+  program compiled on bluesky and then submitted to the cluster; a
+  full
+  description is at\\
+  \verb+T31-LGM/cpl-mapping/map_runoff/main.F90.full.readme+.
+
+\end{description}
+
+\section{Creating a new experiment and modifying namelists}
+\label{sec:namelists}
+
+The relevant scripts from the new experiment are copied in\\
+\verb+T31-LGM/scripts/T31.LGM.test/+
+
+\subsection{creating default low resolution CCSM run}
+On bluesky
+\begin{verbatim}
+cd /fis/cgd/cseg/csm/collections/ccsm3_0_rel04/scripts
+./create_newcase -case $HOME/scripts/T31.LGM.test -res T31_gx3v5 -mach bluesky
+cd $HOME/scripts/T31.LGM.test
+\end{verbatim}
+Edit \verb+env_conf+ to change the case string to T31 LGM test run
+\begin{verbatim}
+./configure -mach bluesky
+\end{verbatim}
+
+\subsection{Copying over relevant data files}
+
+I copied the files created in section \ref{sec:data} to the SourceMods
+directory of the new experiment, following the convention used in
+b30.104 (even though these aren't really modifications to the source
+code). All the file copying is documented in \verb+SourceMods/readme+.
+
+\subsection{Namelist modifications}
+
+Note that by default data files are often copied to the run directory
+(/ptmp/user/expt) using the script ccsm\_getinput, but apparently the
+script ccsm\_cpdata should be used instead for user-specified data
+files. I ended up modifying the ccsm\_cpdata script to avoid errors
+when the model was built twice - see note in section
+\ref{sec:namelists}\ref{sec:building} below.
+
+These modifications were made based on using diff (or ediff) with
+previous experiments. I got the previous run scripts from the
+following locations:
+
+\begin{verbatim}
+# b30.004=T42_PD; 100.02=T42_1780; 104[w]=T42_LGM; 031=T31_PD; 105=T31_1780;
+set cgd=/fis/cgd/cseg/csm/runs/ccsm3_0
+set zav=/home/bluesky/zav/ccsm_runs
+cp -r $zav/b30.104 $zav/b30.104w $cgd/b30.105 .
+# note that /fis/cgd/ccr/paleo/ccsm_runs should have same scripts as in zav
+\end{verbatim}
+
+\subsubsection{ATM}
+
+For LGM, need to change topography (note that the atmosphere has
+pressure levels near the surface and height levels higher up; PHIS
+specifies surface geopotential; SGH specifies orography standard
+deviation, used for gravity waves) and surface pressure (PS; note that
+the land surface during the LGM is at a higher elevation on average
+compared the sea level because of the ice sheets, but the pressure
+should be the same since the atmosphere has the same mass; this subtle
+point is addressed in b30.104, and hence also here, because it is
+required by PMIP). Also need to change ozone and aerosols from default
+PD values to 1780 values, and change CO$_2$, CH$_4$, N$_2$O to LGM
+values.
+
+\verb+Buildnml_Prestage/cam.buildnml_prestage.csh+: Give location of
+1780 aerosol and ozone data as in b30.105. Change initial condition
+(datinit), which includes topography, to LGM file generated in Section
+\ref{sec:data}. I took the fincl1 and fincl2 fields - extra variables
+to include in primary and secondary history files - from
+b30.104w. Mentioned ozncyc (true to assume 1 year ozone data rather
+than longer dataset) and scenario\_carbon\_scale take their default
+value; presumably unnecessary but following b30.104/b30.104w/b30.105.
+Set solar constant as in b30.104/b30.104w/b30.105, and used greenhouse
+forcings as in b30.104.
+
+\subsubsection{LND}
+
+\verb+Buildnml_Prestage/clm.buildnml_prestage.csh+: Indicated datasets
+built based on Peltier ICE-5G for b30.104 for glacier, raw inland
+water, and plant functional type distributions. Set fsurdat='' so that
+it will be generated during first run, after which I will copy it from
+execute directory to SourceMods/src.clm/surface-data.096x048.LGM.nc
+and specify it in fsurdat.
+
+\verb+SourceMods/src.clm/mksrfdatMod.F90+: This file corrects default
+to put wetlands on glaciers since they weren't specified otherwise
+(b30.104).  Also makes new coast area nearest neighbor type rather
+than wetland (b30.104w).
+
+Note that I used present day (default) runoff rather than create a
+file based on the new topography. b30.104/b30.104w did the same -
+didn't seem worth the headache. Also note that in b30.105 (b30.031
+hybrid), finidat is specified. This is initialization data for
+prognostic land model variables, used by hybrid runs but not b30.104
+or me.
+
+\subsubsection{OCN}
+
+\verb+Buildnml_Prestage/pop.buildnml_prestage.csh+: Set initial
+condition T-S distribution file, LGM topography/coastline, and mask
+file (tells whether it's a marginal sea, as well as name of basin for
+diagnostics).
+
+\subsubsection{ICE}
+
+\verb+Buildnml_Prestage/csim.buildnml_prestage.csh+: Include
+indication of LGM topography/coastline file as in b30.104. Note that
+by default lower ice albedos, specified here, are used for T31 runs
+compared with T42 (for better fit with PD observations).
+
+\subsubsection{CPL}
+
+Buildnml{\_}Prestage/cpl.buildnml{\_}prestage.csh: Change orbital
+forcing to orb{\_}year = -19050 and indicate new mapping files.
+
+\subsection{Building and submitting run}
+\label{sec:building}
+
+On bluesky, having made all the modifications described above, try to
+build the model.
+\begin{verbatim}
+./T31.LGM.test.bluesky.build
+\end{verbatim}
+
+Note that when a run is started (if CONTINUE\_RUN is FALSE), the model
+is automatically built. I replaced a handful of lines in the namelist
+prestage scripts that had ccsm\_getinput with ccsm\_cpdata (allows you
+to specify exactly where data file is rather than searching for it),
+as described above and in the readme files. While ccsm\_getinput will
+not copy a file if it already exists in the target directory,
+ccsm\_cpdata will. This causes errors due to read-only file
+permissions when the model is re-built at the start of a run. I could
+have just skipped the build step, so the model would only be built
+once, but instead I copied ccsm\_cpdata to a local folder and edited
+it not to overwrite files that already exist (to avoid any other
+errors). See Buildnml{\_}Prestage/Tools/.
+
+In env\_run, set length of time for run (STOP\_OPTION, STOP\_N) and
+number of times to resubmit run (RESUBMIT), and submit run to cluster.
+\begin{verbatim}
+llsubmit T31.LGM.test.bluesky.run
+\end{verbatim}
+
+\section{Debugging}
+
+\begin{center}
+Thanks to further help from Brian Kauffman, Esther Brady, Cecilia Bitz,\\ 
+Bruce Briegleb, Bette Otto-Bliesner
+\end{center}
+
+The experiment initially had few bugs, which were fixed as follows:
+\begin{description}
+
+\item[(1)] Model crashed with LGM CAM datinit file (topography): This
+  was apparently because CAM runs close to instability with the
+  default 30min time step. I reduced the time step to 10min.
+
+\item[(2)] Model crashed with LGM POP T-S initial condition: This was
+  because the TS ic binary file was written in the native machine
+  format, which was apparently different on the machine I used to
+  create the file from on the machine where the script was originally
+  run. I changed lev2grid.csh to explicitly specify the binary format
+  (ieee-be) in the Matlab script it creates.
+
+\item[(3)] Model crashed with LGM KMT/regmask/mappings: This was
+  because, in all my copying of files between computers, I
+  accidentally built the coupler mapping files with the penultimate
+  iteration of the KMT file, which differed from the final KMT file at
+  several grid points. So the model saw one ocean coastline in the
+  KMT/regmask files, and a second one in the coupler maps. This led
+  the coupler to mapvalues of 1e30 (missing value) from the ocean
+  (outside the ocean region) to the atmosphere.
+
+\end{description}
+
+To address bug (3), I ran the model with several source code
+modifications, asking it to print a coupler history file (NetCDF)
+earlier in the initialization and to include several more fields in
+the file. There was an issue that a run can spend about 4-25 hours in
+the queue before running, which was resolved by using a partial node
+and allowing sharing in the 32-node cluster (this probably made the
+model run a lot slower, but jobs spent almost no time waiting in the
+queue). I wrote a shell script to create new cases of this type, as I
+was running a lot of debug experiments. I also ran the model with
+horizontally uniform T-S i.c. (based on a Levitus T-S profile); with
+no sea ice initially; and outputting history files every time
+step. These modifications are copied in\\
+\verb+T31-LGM/debug/T31.LGM.debug_mods/+
+
+I used several Matlab scripts to examine the setup files. These are in\\ 
+\verb+T31-LGM/debug/+
+
+\bibliographystyle{apalike}
+\bibliography{all}
+
+%\begin{flushright}
+%  {\it Printed \today}
+%\end{flushright}
+
+\end{document}

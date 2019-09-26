@@ -1,0 +1,2 @@
+Files under 1MB go in this folder.
+Larger files for sharing should be stored elsewhere.

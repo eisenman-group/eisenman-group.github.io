@@ -1,0 +1,122 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+
+<head>
+<title>Ian Eisenman research group GitHub Page</title>
+<link rel="stylesheet" type="text/css" href="main_style.css" />
+</head>
+
+<body>
+
+<div id="wrap">
+
+	<div id="header">
+		<img src="http://eisenman.ucsd.edu/img/seaice_ariane.jpg" width="460" height="155" alt="" class="logo" /> 
+	</div>
+
+	<div id="navigtabs">
+		<ul class="menu">
+		</ul>
+	</div>
+
+	<div id="contentwide">
+
+
+<h2>Ian Eisenman research group GitHub Page</h2>
+
+<p>[See also: <a href="http://eisenman.ucsd.edu/code.html">UCSD website</a>]</p>
+
+<p><b>Model of iceberg drift and decay:</b> Matlab code, as well as input forcing and seeding fields, for a Lagrangian iceberg model.<br>
+<a href='iceberg_model_WDE17.m'>iceberg_model_WDE17.m</a><br>
+<a href='https://ndownloader.figshare.com/files/17809334'>iceberg_model_WDE17.zip</a><br>
+Wagner, Dell, and Eisenman (2017). An analytical model of iceberg drift.
+<i>J Phys Oceanogr</i> 47, 1605-1616.
+</p>
+
+<p><b>CMIP5 and CESM-LE sea ice and global temperature</b>: NetCDF file containing processed GCM output from the CMIP5 and CESM-LE (aka LENS) archives: Arctic and Antarctic sea ice extent and sea ice area, as well global-mean surface air temperature.<br>
+<a href="https://ndownloader.figshare.com/files/17809367">CMIP5_processed_data_RE17.nc</a></br>
+<a href="https://ndownloader.figshare.com/files/17809370">CESMLE_processed_data_RE17.nc</a><br>
+E. Rosenblum and I. Eisenman</u> (2017).
+Sea ice trends in climate models only accurate in runs with biased global warming.
+<i>J Climate</i> 30, 6265-6278.
+</p>
+
+<p><b>CMIP3 sea ice and global temperature</b>: NetCDF file containing processed GCM output from the CMIP3 archive: Arctic and Antarctic sea ice extent and sea ice area, as well global-mean surface air temperature.<br>
+<a href="https://ndownloader.figshare.com/files/17809373">CMIP3_processed_data_RE16.nc</a><br>
+E. Rosenblum and I. Eisenman (2016). 
+Faster Arctic sea ice retreat in CMIP5 than in CMIP3 due to volcanoes.
+<i>J Climate</i> 29, 9179-9188.
+</p>
+
+<p><b>CESM ocean-only simulations</b>: Details related to CESM1 simulations in which only the ocean is active and the atmosphere, sea ice, and land runoff are specified from previous coupled simulations.<br>
+<a href="https://ndownloader.figshare.com/files/17809391">CESM-setup-notess_SES2016.pdf</a><br>
+<a href="https://ndownloader.figshare.com/files/17809397">PI-run-scriptss_SES2016.tgz</a><br>
+<a href="https://ndownloader.figshare.com/files/17809406">processed-simulation-outputs_SES2016.tgz</a><br>
+S. Sun, I. Eisenman, and A. Stewart (2016). 
+The influence of Southern Ocean surface buoyancy forcing on glacial-interglacial changes in the global deep ocean stratification.
+<i>Geophys Res Lett</i> 43, 8124-8132.
+</p>
+
+<p><b>Idealized model of sea ice and global climate with weather noise:</b> Matlab code for a diffusive energy balance model (EBM) with seasonal variations, sea ice, and stochastic weather noise.<br>
+<a href='sea_ice_EBM_WE15b.m'>sea_ice_EBM_WE15b.m</a>
+[<a href='python/sea_ice_EBM_WE15b.py'>python version</a>]<br>
+Wagner and Eisenman (2015). False alarms: How early warning signals falsely predict abrupt sea ice loss. <i>Geophys Res Lett</i> 42, 10333-10341.
+</p>
+
+<p><b>Idealized model of sea ice and global climate:</b> Matlab code for a diffusive energy balance model (EBM) with seasonal variations and sea ice.<br>
+<a href='sea_ice_EBM_WE15.m'>sea_ice_EBM_WE15.m</a>
+[<a href='python/sea_ice_EBM_WE15.py'>python version</a>]<br>
+Model documentation: <a href='WE15_numerics.pdf'>WE15_numerics.pdf</a><br>
+Wagner and Eisenman (2015). How climate model complexity influences sea ice stability. <i>J Climate</i> 28, 3998-4014.</p>
+
+<p><b>Energy balance model (EBM) of global climate:</b> Matlab code for the standard annual-mean EBM discussed in Sec. 2b of the reference below. There is a relatively simple script and a faster but more complicated script.<br>
+<a href='EBM_simple_WE15.m'>EBM_simple_WE15.m</a>
+[<a href='python/EBM_simple_WE15.py'>python version</a>]<br>
+<a href='EBM_fast_WE15.m'>EBM_fast_WE15.m</a>
+[<a href='python/EBM_fast_WE15.py'>python version</a>]<br>
+Wagner and Eisenman (2015). How climate model complexity influences sea ice stability. <i>J Climate</i> 28, 3998-4014.</p>
+
+<p><b>Observed Antarctic sea ice cover:</b> Monthly-mean quantities derived from Version 1 and Version 2 of the Bootstrap daily ice concentration dataset in the Southern Hemisphere: time series of ice extent and ice area, as well as ice concentration fields.<br>
+<a href='SH_sea_ice_area_Bootstrap_V1_V2.txt'>SH_sea_ice_area_Bootstrap_V1_V2.txt</a> <br>
+<a href="https://ndownloader.figshare.com/files/17809295">SH_sea_ice_concentration_Bootstrap_V1_V2.nc</a><br>
+Eisenman, Meier, and Norris (2014).
+A spurious jump in the satellite record: has Antarctic sea ice expansion been overestimated?
+<i>The Cryosphere</i> 8, 1289-1296.</p>
+
+<p><b>Toy model of sea ice and climate:</b> Matlab code for a simplified single-column sea ice model.<br>
+<a href='sea_ice_model_E12.m'>sea_ice_model_E12.m</a><br>
+Eisenman (2012). Factors controlling the bifurcation structure of sea ice retreat. <i>J Geophys Res</i> 117, D01111.</p>
+
+<p><b>Observed Arctic sea ice edge:</b> Zonal-mean sea ice edge latitude, sea ice extent, and sea ice equivalent extent (defined as total surface area, including land, north of the zonal-mean sea ice edge latitude) from 1978-2010 daily satellite-derived Northern Hemisphere sea ice concentration.<br>
+<a href="NH_observed_ice_edge_lat_and_extent.txt">NH_observed_ice_edge_lat_and_extent.txt</a><br>
+Eisenman (2010). Geographic muting of changes in the Arctic sea ice cover. <i>Geophys Res Lett</i> 37, L16501.</p>
+
+<p><b>CCSM3 simulations with large and medium glacial ice sheets:</b>
+This webpage has details regarding our NCAR CCSM3 T31x3 large ice sheet (Last Glacial Maximum) and medium ice sheet (12kya) simulations, including model setup description, setup files, and simulation results.<br>
+<a href="CCSM-LGM-and-12k/">CCSM-LGM-and-12k</a><br>
+Eisenman, Bitz, and Tziperman (2009). Rain driven by receding ice sheets as a cause of past climate change. <i>Paleoceanography</i> 24, PA4209.</p>
+
+<p><b>Single-column Arctic sea ice and climate model:</b> Matlab code for an idealized model of the coupled Arctic sea ice-ocean-atmosphere climate system.<br>
+<a href='sea_ice_model_EW09.m'>sea_ice_model_EW09.m</a><br>
+Eisenman and Wettlaufer (2009). Nonlinear threshold behavior during the loss of Arctic sea ice. <i>Proc Natl Acad Sci USA</i> 106, 28-32.</p>
+
+<p><b>Paleo insolation:</b> Matlab script to compute daily average insolation (sunlight at the top of the atmosphere) as a function of day and latitude at any point during the past 5 million years.<br>
+<a href='daily_insolation.m'>daily_insolation.m</a><br>
+Huybers and Eisenman (2006). Integrated summer insolation calculations. <i>NOAA/NCDC Paleoclimatology Program</i> <a href="http://idn.ceos.org/portals/Metadata.do?Portal=idn_ceos&EntryId=NOAA_NCDC_PALEO_2006-079&MetadataView=Full" style="color: #000000">Data Contribution #2006-079</a>.</p>
+
+<p><b>Miscellaneous Matlab scripts:</b> Toolbox of various Matlab functions.<br>
+<a href="matlab-toolbox/">matlab-toolbox</a><p>
+
+<p>&nbsp;</p>
+
+
+	</div>
+
+	<div id="footer">
+	</div>
+	
+	<p class="copy"></p>
+
+</div>
+</body>
+</html>

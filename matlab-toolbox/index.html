@@ -1,0 +1,74 @@
+<html>
+<head>
+<title>Matlab toolbox</title>
+<style>
+p
+{font-family:Verdana; font-size:13;}
+</style>
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3090533-3']);
+  _gaq.push(['_trackPageview']);
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+</head>
+<body link="#0000FF" vlink="#0000FF" alink="#0000FF">
+
+<div style="width: 100%; max-width: 860px">
+<table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td>
+<br>
+<TABLE width="96%" cellpadding="0" cellspacing="0" border="0" align="center">
+ <tr><td align=left>
+<p style="font-family:Helvetica, sans-serif"><font size="+1"></font></p></td>
+ <td align=right>
+<table cellpadding="8" cellspacing="0" border="0" ><tr><td>
+ <p><a href="../../code.html">back</a></p></td></tr></table>
+</td></tr></TABLE>
+<hr noshade size=1>
+
+<br>
+<TABLE width="96%" cellpadding="0" cellspacing="0" border="0" align="center">
+ <tr><td align=left>
+
+<p><b>Miscellaneous Matlab scripts</b></p>
+
+<p><a href=power_spectrum.m>power_spectrum.m</a>: Create power spectrum
+estimate using either (i) periodogram, (ii) averaging over frequency
+bands, or (iii) Thompson multi-taper method.</p>
+
+<p><a href=corr2.m>corr2.m</a>: Compute linear correlation in which the p-value accounts for autocorrelation in the records.
+
+<p><a href=regress2.m>regress2.m</a>: Compute linear regression in which the confidence interval accounts for autocorrelation in the records.
+
+<p><a href=lowpass_filter.m>lowpass_filter.m</a>: Smooth a time series with a low-pass filter. Can use either (i) simple fft filter, (ii) Butterworth filter, or (iii) Chebyshev filter.</p>
+
+<p><a href=contour_fill.m>contour_fill.m</a>: Fill a contour region with a specified color. Similar to contourf, except that the shading is a color you specify rather than using the current colormap. Can be used, for example, to fill land regions on a map with gray shading.</p>
+
+<p><a href=ncload2.m>ncload2.m</a>:
+Load variables from a netCDF file. Syntax and functionality is based on ncload.m from the old "NetCDF Toolbox", but this script uses the native Matlab netCDF functions introduced in version R2010b.</p>
+
+<!--<p><a href=ncload2.m>ncload2.m</a> (edited version of ncload.m):
+Requires Matlab <a href="http://mexcdf.sourceforge.net/downloads" style="color: #000000">NetCDF Toolbox</a>, which contains the function ncload to load variables from a NetCDF data file. This edited version of ncload replaces missing_value and _FillValue with NaN, multiplies data by scale_factor if present, and allows variable
+index ranges to be specified (to load only part of large variables).</p>-->
+
+<p><a href=pcolor2.m>pcolor2.m</a> (pcolor interface): Make a
+"pseudocolor plot" of a matrix,
+but unlike pcolor which drops the last row and column,
+plot the entire matrix and assume the 
+locations given are mid-points of the grid
+boxes (pcolor assumes they are corner points).</p>
+
+<!--<p><a href=subplot2.m>subplot2.m</a> (subplot interface): Make
+subplots with a specified amount of space between them.</p>-->
+
+<!--<p><a href=find_approx.m>find_approx.m</a>: Find the index of a matrix that is most nearly equal to a given value.</p>-->
+
+</td></tr></TABLE>
+
+</td></tr></table></div>
+
+</body></html>
