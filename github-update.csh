@@ -7,6 +7,8 @@
 #   git clone https://github.com/eisenman-group/eisenman-group.github.io code
 # then edited files, then ran this from ~/other/website/code/.
 #
+# also need to update index.html (ediff index.html ../code.html and change links).
+#
 # can also update doi for github site, which is
 #   doi:10.5281/zenodo.3628744
 # by going to https://github.com/eisenman-group/eisenman-group.github.io/releases
