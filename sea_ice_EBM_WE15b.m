@@ -135,7 +135,7 @@ subplot(2,1,1)
 plot(Fv, SIA_sept,'r',Fv,SIA_mar,'b')
 xlabel('F (W m^{-2)}')
 ylabel('Sea Ice Area (10^6 km^2)')
-legend('winter','summer')
+legend('summer','winter')
  
 subplot(2,1,2)
 plot(Fv, Tpole_sept,'r',Fv,Tpole_mar,'b')

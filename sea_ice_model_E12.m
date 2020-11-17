@@ -12,6 +12,9 @@ function [final_year, full_time_series]=sea_ice_model_E12(varargin)
 %   subplot(2,1,1), plot(Y(:,1),-Y(:,2)*5.9), ylabel('ice thickness (m)')
 %   subplot(2,1,2), plot(Y(:,1),Y(:,3)*8.8), ylabel('sfc temp (^oC)')
 %
+% See also the dimensional version of this model at
+%   http://eisenman.ucsd.edu/code/sea_ice_model_E12_dimensional.m
+%
 % Reference:
 %   Ian Eisenman, 2012. Factors controlling the bifurcation structure of
 %   sea ice retreat. J Geophys Res 117, D01111. 

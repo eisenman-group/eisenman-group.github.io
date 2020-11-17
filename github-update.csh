@@ -9,9 +9,12 @@
 #
 # also need to update index.html (ediff index.html ../code.html and change links).
 #
-# can also update doi for github site, which is
+# can get a DOI directly from figshare.
+# can also update DOI for github site, which is
 #   doi:10.5281/zenodo.3628744
 # by going to https://github.com/eisenman-group/eisenman-group.github.io/releases
+# can see new DOI at 
+# https://zenodo.org/account/settings/github/repository/eisenman-group/eisenman-group.github.io
 
 git add --all
 git commit -m "update"
