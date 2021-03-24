@@ -7,7 +7,7 @@
 #   git clone https://github.com/eisenman-group/eisenman-group.github.io code
 # then edited files, then ran this from ~/other/website/code/.
 #
-# also need to update index.html (ediff index.html ../code.html and change links).
+# when updating, also need to update index.html (ediff index.html ../code.html and change links).
 #
 # can get a DOI directly from figshare.
 # can also update DOI for github site, which is
