@@ -10,22 +10,20 @@
 #%
 #% Till Wagner and Ian Eisenman, November 2015, wrote matlab version
 #% hacked into python by Cecilia Bitz, April 2016
+#% minor bug fix Jan 2022 (in eq.A1, S[:,i-1] -> S[:,i])
 #%
 #% References:
 #% T.J.W. Wagner and I. Eisenman (2015a). How climate model complexity
 #%   influences sea ice stability. J Climate 28, 3998-4014.
 #% T.J.W. Wagner and I. Eisenman (2015b). False alarms: How early warning
 #%   signals falsely predict abrupt sea ice loss. Geophys Res Lett 42, 103320341.
-
 import numpy as np
 import scipy
-
 # if available import pylab (from matlibplot)
 try:
     import matplotlib.pylab as plt
 except ImportError:
     pass
-
 n = 200.    #%grid resolution
 dur = 35    #%duration of simulation
 sig = 0.5   #%noise amplitude
@@ -68,27 +66,21 @@ dt_tau = dt/tau
 dc = dt_tau*cg_tau
 kappa = (1.+dt_tau)*np.eye(n)-dt/cg*diffop
 
-
 # In[2]:
-
 #%%Seasonal forcing (WE15 eq.3)
 ty = np.arange(dt/2., (1.-dt/2.)+(dt), dt)
 Spart1=np.tile(S0-S2*x**2,(1,nt))     # makes 1 x 200000
 Spart1=Spart1.reshape(int(nt),200)    # makes 1000x200 
 Spart1=np.transpose(Spart1)           # finally 200x1000 done right
-
 Spart2=np.tile(S1*np.cos(2*np.pi*ty),(1,int(n)))
 Spart2=Spart2.reshape(200,int(nt))
             
 Spart3=np.tile(x,(1,nt))
 Spart3=Spart3.reshape(int(nt),200)
 Spart3=np.transpose(Spart3)
-
 S=Spart1-Spart2*Spart3
 
-
 # In[3]:
-
 #%%Further definitions
 M = B+cg_tau
 aw = a0-a2*x**2
@@ -111,9 +103,7 @@ print N_red[0:10]
 E100 = np.zeros((int(n), int(dur*100.)))
 T100 = np.zeros((int(n), int(dur*100.)))
 
-
 # In[4]:
-
 #%%Initial conditions ------------------------------------------------------
 T = 10.*np.ones( (int(n), 1))
 Tg = T
@@ -139,27 +129,22 @@ for years in np.arange(1, int(dur+1)):  #%%Loop over Years
         #% surface temperature                                              
         T0 =  C/(M-kLf/E)                 #%WE15, eq.A3                  
         T = E/cw*(E>=0)+T0*(E<0)*(T0<0)   #%WE15, eq.9 
-
         #% Forward Euler on E                                               
         E = E+dt*(C-M*T+Fb)              #%WE15, eq.A2 
-
         #% Implicit Euler on Tg  %WE15, eq.A1 
         ondiag=(dc/(M-kLf/E)*(T0<0)*(E<0))
         ondiag=ondiag.reshape(int(n))
         thematrix=kappa-np.diag(ondiag)
         rightside=Tg+dt_tau*(E/cw*(E>=0)+
-                     (ai*S[:,i-1].reshape(200,1)
+                     (ai*S[:,i].reshape(200,1)
                       -A+F+N)/(M-kLf/E)*(T0<0)*(E<0))
         
         Tg=np.linalg.solve(thematrix,rightside)
-
 print 'Tg'
 print Tg[0:4]
 print Tg[-4:]
 
-
 # In[5]:
-
 #%compute ice edge
 xi = np.ones([1, p])    # array of the location in x
 for i in np.arange(1,p):
@@ -167,7 +152,6 @@ for i in np.arange(1,p):
         iceindexes=np.where(E100[:,int(i)-1]<0.)
         xicy=x[iceindexes]
         xi[0,int(i)-1] = xicy[0]
-
 #%--------------------------------------------------------------------------
 #%compute yearly summer and winter ice area and temperature at pole
 xialt=xi.reshape(years,100)
@@ -180,9 +164,7 @@ Fv = np.linspace(Fdef, F, int(dur-spinup))  #%yearly forcing without spinup
 Tpole_sept=Tpole_sept.reshape(int(years-spinup))
 Tpole_mar=Tpole_mar.reshape(int(years-spinup))
 
-
 # In[10]:
-
 print 'now plot it'
 #%plot summer/winter ice areas and temperatures at the pole
 #plt.figure(1)
@@ -195,5 +177,4 @@ plt.subplot(2, 1, 2)
 plt.plot(Fv, Tpole_sept, Fv, Tpole_mar)
 plt.xlabel('F (W m^{-2)}')
 plt.ylabel('Pole Temp (deg C)')
-
 plt.show()

@@ -16,7 +16,7 @@
 % and pole.
 %
 % Till Wagner (tjwagner@ucsd.edu) & Ian Eisenman (eisenman@ucsd.edu), 
-% created Mar 2015, minor edits Apr 2016.
+% created Mar 2015, minor edits Apr 2016, minor bug fix Jan 2022 [in Eq. (A1), S(:,i) -> S(:,i+1)].
 %
 % Reference: T.J.W. Wagner and I. Eisenman (2015). How climate model
 % complexity influences sea ice stability. J Climate 28, 3998-4014.
@@ -92,7 +92,7 @@ for years = 1:dur
         E = E+dt*(C-M*T+Fb);                 %WE15 Eq. (A2)
         % Implicit Euler for Tg
         Tg = (kappa-diag(dc./(M-kLf./E).*(T0<0).*(E<0)))\ ...
-            (Tg + (dt_tau*(E/cw.*(E>=0)+(ai*S(:,i) ...
+            (Tg + (dt_tau*(E/cw.*(E>=0)+(ai*S(:,i+1) ...
             -A+F)./(M-kLf./E).*(T0<0).*(E<0))));        %WE15 Eq. (A1)
     end
     if mod(years,10)==0, disp(['year ' num2str(years) ' complete']), end

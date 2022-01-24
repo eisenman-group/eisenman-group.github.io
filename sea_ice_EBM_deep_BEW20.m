@@ -28,6 +28,7 @@
 % spaced in x=sin(lat), between the equator and pole.
 %
 % Emma Beer (ebeer@ucsd.edu), Adapted from sea_ice_EBM_WE15.m Jan 2020.
+% Minor bug fix Jan 2022 [in Eq. (A1), S(:,i) -> S(:,i+1)].
 %
 % References: 
 % E. Beer, I. Eisenman, and T.J.W. Wagner (2020). Polar amplification due 
@@ -137,7 +138,7 @@ for years = 1:dur
         Ed = Ed+dt*(Cd-Md*Td+kv.*(T-Tm).*(T>Tm)-kv*(Td-Tm)); 
         % Implicit Euler for Tg and Tgd
         Tg = (kappa-diag(dc./(M-kLf./E).*(T0<Tm).*(E<0)))\ ...
-            (Tg + (dt_tau*((Tm+E/cw).*(E>=0)+(ai*S(:,i) ...
+            (Tg + (dt_tau*((Tm+E/cw).*(E>=0)+(ai*S(:,i+1) ...
             -A+F+B*Tm-kLf.*Tm./E)./(M-kLf./E).*(T0<Tm).*(E<0)+Tm.*(E<0).*(T0>Tm))));        %WE15 Eq. (A1)
         Tgd = kappa_d\(Tgd + dt_tau*(Tm+Ed/cwd));
     end

@@ -6,7 +6,8 @@
 % and Eisenman (2015a, hereafter WE15). This version of the model has the
 % addition of stochastic weather noise.
 %
-% Till Wagner and Ian Eisenman, November 2015
+% Till Wagner (tjwagner@ucsd.edu) & Ian Eisenman (eisenman@ucsd.edu), 
+% created Nov 2015, minor bug fix Jan 2022 [in Eq. (A1), S(:,i) -> S(:,i+1)].
 %
 % References:
 % T.J.W. Wagner and I. Eisenman (2015a). How climate model complexity
@@ -102,7 +103,7 @@ for years = 1:dur
         E = E+dt*(C-M*T+Fb);                 %WE15, eq.A2
         % Implicit Euler on Tg
         Tg = (kappa-diag(dc./(M-kLf./E).*(T0<0).*(E<0)))\ ...
-            (Tg + (dt_tau*(E/cw.*(E>=0)+(ai*S(:,i) ...
+            (Tg + (dt_tau*(E/cw.*(E>=0)+(ai*S(:,i+1) ...
             -A+F+N)./(M-kLf./E).*(T0<0).*(E<0))));        %WE15, eq.A1
     end
     yrs = sprintf('year %d complete',years); disp(yrs)

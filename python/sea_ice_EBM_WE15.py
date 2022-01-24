@@ -23,8 +23,9 @@
 # The computational time of this code is comparable to that of the
 # corresponding Matlab code (without having performed proper performance checks)
 #
-# Till Wagner & Ian Eisenman, Oct 15
-# tjwagner@ucsd.edu or eisenman@ucsd.edu
+# Till Wagner (tjwagner@ucsd.edu) & Ian Eisenman (eisenman@ucsd.edu), 
+# created Oct 2015, minor bug fix Jan 2022 (in eq.A1, S[:,i] -> S[:,i+1]).
+#
 #--------------------------------------------------------------------------
 import numpy as np
 D = 0.6 # diffusivity for heat transport (W m^-2 K^-1)
@@ -99,7 +100,7 @@ T = E/cw*(E>=0)+T0*(E<0)*(T0<0); #WE15, eq.9
 E = E+dt*(C-M*T+Fb); #WE15, eq.A2
 #Implicit Euler on Tg
 Tg = np.linalg.solve(kappa-np.diag(dc/(M-kLf/E)*(T0<0)*(E<0)),
-Tg+(dt_tau*(E/cw*(E>=0)+(ai*S[i,:]-A)/(M-kLf/E)*(T0<0)*(E<0))))
+Tg+(dt_tau*(E/cw*(E>=0)+(ai*S[i+1,:]-A)/(M-kLf/E)*(T0<0)*(E<0)))) #WE15, eq.A1
 print 'year %d complete' %(years)
 #-------------------------------------------------------------------------
 #output only converged, final year
