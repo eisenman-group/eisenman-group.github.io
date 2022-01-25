@@ -79,6 +79,7 @@ Spart3=np.tile(x,(1,nt))
 Spart3=Spart3.reshape(int(nt),200)
 Spart3=np.transpose(Spart3)
 S=Spart1-Spart2*Spart3
+S = np.vstack((S,S[0,:]));
 
 # In[3]:
 #%%Further definitions

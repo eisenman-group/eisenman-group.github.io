@@ -45,11 +45,11 @@ cg = 0.01*cw; # ghost layer heat capacity(W yr m^-2 K^-1)
 tau = 1e-5; # ghost layer coupling timescale (yr)
 ##The default run in WE15, Fig 2 uses the time-stepping parameters: -------
 #n=400; % # of evenly spaced latitudinal gridboxes (equator to pole)
-#nt=1e3; % # of timesteps per year (approx lower limit of stability)
+#nt=1000; % # of timesteps per year (approx lower limit of stability)
 #dur=200; % # of years for the whole run
 ##For a quicker computation, use the parameters: --------------------------
 n = 100;
-nt = 1e3;
+nt = 1000;
 dur= 30;
 dt = 1/nt;
 #Spatial Grid -------------------------------------------------------------
@@ -67,8 +67,8 @@ dc = dt_tau*cg_tau;
 kappa = (1+dt_tau)*np.identity(n)-dt*diffop/cg;
 ##Seasonal forcing (WE15 eq.3)
 ty = np.arange(dt/2,1+dt/2,dt)
-S = (np.tile(S0-S2*x**2,[nt,1])-
-np.tile(S1*np.cos(2*np.pi*ty),[n,1]).T*np.tile(x,[nt,1]));
+S = (np.tile(S0-S2*x**2,[nt,1])-np.tile(S1*np.cos(2*np.pi*ty),[n,1]).T*np.tile(x,[nt,1]));
+S = np.vstack((S,S[0,:]));
 ##Further definitions
 M = B+cg_tau;
 aw = a0-a2*x**2 # open water albedo
@@ -101,7 +101,6 @@ E = E+dt*(C-M*T+Fb); #WE15, eq.A2
 #Implicit Euler on Tg
 Tg = np.linalg.solve(kappa-np.diag(dc/(M-kLf/E)*(T0<0)*(E<0)),
 Tg+(dt_tau*(E/cw*(E>=0)+(ai*S[i+1,:]-A)/(M-kLf/E)*(T0<0)*(E<0)))) #WE15, eq.A1
-print 'year %d complete' %(years)
 #-------------------------------------------------------------------------
 #output only converged, final year
 tfin = np.linspace(0,1,100)
@@ -148,7 +147,7 @@ plt.plot(tfin,xi,'k')
 plt.contour(tfin,x,Tfin,[-0.001],colors='r',linestyles='-')
 plt.xlabel('t (final year)')
 plt.ylabel('x')
-plt.title(r'T ($^\circ$C)')
+plt.title(r'T ($^\\circ$C)')
  
 #plot the ice thickness (Fig 2c)
 plt.subplot(1,4,3)
@@ -157,7 +156,7 @@ hfin = -Efin/Lf*(Efin<0)
 plt.contourf(tfin,x,hfin,clevsh)
 plt.colorbar()
 #plot ice edge on h
-plt.contour(tfin,x,hfin,[0],colors='k')
+# plt.contour(tfin,x,hfin,[0],colors='k')
 plt.plot([tfin[winter], tfin[winter]],[0,max(x)],'k')
 plt.plot([tfin[summer], tfin[summer]],[0,max(x)],'k--')
 plt.xlabel('t (final year)')
@@ -170,7 +169,7 @@ Summer, = plt.plot(x,Tfin[:,summer],'k--',label='summer')
 Winter, = plt.plot(x,Tfin[:,winter],'k',label='winter')
 plt.plot([0,1],[0,0],'k')
 plt.xlabel('x')
-plt.ylabel(r'T ($^\circ$C)')
+plt.ylabel(r'T ($^\\circ$C)')
 plt.legend(handles = [Summer,Winter],loc=0)
  
 #plot ice thickness profiles (Fig 2e)
@@ -195,4 +194,4 @@ xideg = np.degrees(np.arcsin(xi));
 plt.plot(tfin,xideg,'k-')
 plt.ylim([0,90])
 plt.xlabel('t (final year)')
-plt.ylabel(r'$\theta_i$ (deg)')
+plt.ylabel(r'$\\theta_i$ (deg)');

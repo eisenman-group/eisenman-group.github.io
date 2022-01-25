@@ -98,6 +98,7 @@ kappa_d = (1+dt_tau)*eye(n)-dt*diffop_d/cgd;
 %%Seasonal forcing [BEW20 Eq. (10), WE15 Eq. (3)]
 ty = dt/2:dt:1-dt/2;
 S=repmat(S0-S2*x.^2,[1,nt])-repmat(S1*cos(2*pi*ty),[n,1]).*repmat(x,[1,nt]);
+S=[S S(:,1)];
 %%Further definitions
 M = B+cg_tau;
 Md = cg_tau_d;
