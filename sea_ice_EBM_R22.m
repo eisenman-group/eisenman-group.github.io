@@ -13,6 +13,11 @@
 % comments) is available is a separate file:
 %   daily_insolation.m at https://eisenman-group.github.io
 %
+% The results presented in Roach et al. (2022) were generated using python
+% code that is available at the link given at the end of the paper. This
+% Matlab code produces results that have slight numerical differences
+% compared with the python results.
+%
 % Inputs: Any changes to parameter values (see Example below).
 % 
 % Outputs: Climatological mean seasonal cycle during final 20 years of 
@@ -162,6 +167,7 @@ if nargout>0 %save output
     T_c=Tc;
 else
     save sea_ice_EBM_R22.mat tc iceA Ec Tc
+    disp('output saved to sea_ice_EBM_R22.mat')
 end
 
 
