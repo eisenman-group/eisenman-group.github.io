@@ -26,13 +26,6 @@
 
 <p>[See also: <a href="http://eisenman.ucsd.edu/code.html">UCSD website</a>]</p>
 
-
-<p><b>Energy balance model (EBM) of global climate with two ocean layers:</b> Matlab code for an idealized annual-mean EBM with two ocean layers, with a vertical heat flux between the layers that depends on whether the surface temperature is below freeezing (which represents the precense of sea ice). This code is also posted <a href="https://github.com/emma-beer/two-ocean-layer-EBM-2022#two-ocean-layer-ebm-2022">here</a>.
-<a href='two_ocean_layer_EBM_2023.m'>two_ocean_layer_EBM_2023.m</a><br>
-<a href='plot_two_ocean_layer_EBM_2023.m'>plot_two_ocean_layer_EBM_2023.m</a><br>
-E. Beer, I. Eisenman, T.J.W. Wagner, and E. Fine (2023). A possible hysteresis in the Arctic Ocean due to release of subsurface heat during sea ice retreat. <i>Journal of Physical Oceanography</i> 53, 1323-1335.
-</p>
-
 <p><b>Idealized model of sea ice and global climate for sea ice loss simulations:</b> Matlab code for a diffusive energy balance model (EBM) with seasonal variations and sea ice, configured to investigate the climate impacts of sea ice loss.<br>
 <a href='sea_ice_EBM_R22.m'>sea_ice_EBM_EEW22.m</a><br>
 <a href='sea_ice_EBM_R22_eq7.m'>run_sea_ice_EBM_EEW22.m</a><br>
