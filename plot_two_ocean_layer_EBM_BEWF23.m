@@ -1,4 +1,4 @@
-% This code plots output from the code two_ocean_layer_EBM_2023.m. If using
+% This code plots output from the code two_ocean_layer_EBM_BEWF23.m. If using
 % the default parameter values given below, the code produces a plot 
 % similar to the top row of Figure 3 in Beer, Eisenman, Wagner and Fine 
 % (2023; see reference)
@@ -18,7 +18,7 @@ A = 192;              % OLR when T = 0 (W m^-2)
 
 
 % Run model
-[x_out,~,T_out,Td_out,Fb_out] = two_ocean_layer_EBM_2023(F_in,kv_w,kv_i,Ds,Dd,A);
+[x_out,~,T_out,Td_out,Fb_out] = two_ocean_layer_EBM_BEWF23(F_in,kv_w,kv_i,Ds,Dd,A);
 disp('default run completed')
 
 % Take the last value

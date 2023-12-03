@@ -16,7 +16,7 @@
 # can see new DOI at 
 # https://zenodo.org/account/settings/github/repository/eisenman-group/eisenman-group.github.io
 #
-# I am using a token, which is a long a password that's good for just one year. The token is
+# I am using a (classic) personal access token, which is a long a password that's good for just one year. The token is
 # stored in passwords.txt. Instructions for getting a new one at
 # https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token#creating-a-token
 
