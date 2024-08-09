@@ -6,7 +6,7 @@
 % This code is shared with the following paper:
 % I. Eisenman and K. Armour (2024). The radiative feedback continuum from
 % Snowball Earth to an ice-free hothouse. Nature Communications,
-% https://doi.org/10.1038/s41467-024-50406-w.
+% https://doi.org/10.1038/s41467-024-50406-w
 %
 % The code generates the values plotted in Figs. 2d,e of the paper given
 % the simulation output for F_{net}(t) and T(t) (plotted in Fig. 2c). For
