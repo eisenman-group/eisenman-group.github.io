@@ -3,22 +3,22 @@ Uploading large files to Zenodo
 Ian, 7/2024
 (uploading CESM2 data from "Snowball Earth to an ice-free hothouse" runs)
 
-https://zenodo.org/uploads/12826328 [cooling 1]
-	https://doi.org/10.5281/zenodo.12826328
-https://zenodo.org/uploads/12826330 [cooling 2]
-	https://doi.org/10.5281/zenodo.12826330
-https://zenodo.org/uploads/12826332 [warming]
-	https://doi.org/10.5281/zenodo.12826332
+https://zenodo.org/uploads/13376247
+	https://doi.org/10.5281/zenodo.13376247
+https://zenodo.org/uploads/13376249
+	https://doi.org/10.5281/zenodo.13376249
+https://zenodo.org/uploads/13376251
+	https://doi.org/10.5281/zenodo.13376251
 
 	Adapted from https://gist.github.com/slint/2263b2212743a68b2851b2cb7865675e
 
 Step 1: Create an access token at "https://zenodo.org/account/settings/applications/tokens/new/" with the "deposit:write" and "deposit:actions" scopes. 	E.g., Pos8cmFlZUR288B28gVZLoGwoYneB6OZ5EHP3Ue67f5XOZAwxR5I5EHP3eIiBxnvBcx
 
-Step 2: If you haven't yet, create your deposit via the web interface at https://zenodo.org/deposit/new. Fill in the minimum metadata. Click "Save". You will now see the deposit ID in the form "https://zenodo/deposit/ID".
+Step 2: If you haven't yet, create your deposit via the web interface at https://zenodo.org/deposit/new. Fill in the minimum metadata. Click "Save draft". You will now see the deposit ID in the form "https://zenodo/deposit/ID".
 
 Step 3: Enter variables at the command line:
 	token=Pos8cmFlZUR288B28gVZLoGwoYneB6OZ5EHP3Ue67f5XOZAwxR5I5EHP3eIiBxnvBcx
-	ID=12826328
+	ID=13376247
 
 Step 4: Get deposit information including link using your token
 	curl "https://zenodo.org/api/deposit/depositions/$ID?access_token=$token" > tmp.txt
