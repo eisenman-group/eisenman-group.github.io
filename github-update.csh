@@ -19,6 +19,9 @@
 # I am using a (classic) personal access token, which is a long a password that's good for just one year. The token is
 # stored in passwords.txt. Instructions for getting a new one at
 # https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token#creating-a-token
+#
+# When things go awry, can use
+#   git reset --hard origin/master
 
 git add --all
 git commit -m "update"
