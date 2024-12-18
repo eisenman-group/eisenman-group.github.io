@@ -195,5 +195,3 @@ plt.plot(tfin,xideg,'k-')
 plt.ylim([0,90])
 plt.xlabel('t (final year)')
 plt.ylabel(r'$θ_i$ (deg)');
-
-plt.show()

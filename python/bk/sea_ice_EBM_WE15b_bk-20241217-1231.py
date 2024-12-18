@@ -1,4 +1,4 @@
-# Cecilia Bitz's python version (edited by Ian Eisenman):
+# Cecilia Bitz's python version:
 #
 #% This script numerically solves the diffusive energy balance model (EBM)
 #% with seasonal variations, sea ice, and stochastic weather noise described
@@ -24,7 +24,7 @@ try:
     import matplotlib.pylab as plt
 except ImportError:
     pass
-n = 200    #%grid resolution
+n = 200.    #%grid resolution
 dur = 35    #%duration of simulation
 sig = 0.5   #%noise amplitude
 Fdef = 0.   #%initial Forcing level 
@@ -69,16 +69,17 @@ kappa = (1.+dt_tau)*np.eye(n)-dt/cg*diffop
 # In[2]:
 #%%Seasonal forcing (WE15 eq.3)
 ty = np.arange(dt/2., (1.-dt/2.)+(dt), dt)
-Spart1=np.tile(S0-S2*x**2,(1,int(nt)))     # makes 1 x 200000
+Spart1=np.tile(S0-S2*x**2,(1,nt))     # makes 1 x 200000
 Spart1=Spart1.reshape(int(nt),200)    # makes 1000x200 
 Spart1=np.transpose(Spart1)           # finally 200x1000 done right
 Spart2=np.tile(S1*np.cos(2*np.pi*ty),(1,int(n)))
 Spart2=Spart2.reshape(200,int(nt))
-Spart3=np.tile(x,(1,int(nt)))
+            
+Spart3=np.tile(x,(1,nt))
 Spart3=Spart3.reshape(int(nt),200)
 Spart3=np.transpose(Spart3)
 S=Spart1-Spart2*Spart3
-S = np.hstack((S,S[:,0].reshape(-1,1)))
+S = np.vstack((S,S[0,:]));
 
 # In[3]:
 #%%Further definitions
@@ -87,8 +88,8 @@ aw = a0-a2*x**2
 kLf = k*Lf
 #%%noise timeseries
 sig_noise = sig/np.sqrt(dt)
-print('sig_noise')
-print(sig_noise)
+print 'sig_noise'
+print sig_noise
 noise = sig_noise * plt.randn(1, int(dur*nt))
 lp = 1./52.#%1 week 'decorrelation' time
 alpha = np.exp(-dt/lp)  # this alpha differs from the one below
@@ -97,8 +98,8 @@ N_red = noise*0.
 N_red[0] = noise[0]
 for i in np.arange(1, (len(noise))-1):
     N_red[i] = alpha*N_red[i-1] + nalpha*noise[i]
-print('N_red')
-print(N_red[0:10])
+print 'N_red'
+print N_red[0:10]
 #%%Set up output arrays, saving 100 timesteps/year
 E100 = np.zeros((int(n), int(dur*100.)))
 T100 = np.zeros((int(n), int(dur*100.)))
@@ -114,7 +115,7 @@ N = 0.  # the noise
 F = Fdef
 #%%run the model(see WE15_NumericIntegration.pdf)-------------------------
 for years in np.arange(1, int(dur+1)):  #%%Loop over Years
-    print(years)
+    print years
     for i in np.arange(1, int(nt+1)):
         m=m+1
         if years>spinup:
@@ -140,9 +141,9 @@ for years in np.arange(1, int(dur+1)):  #%%Loop over Years
                       -A+F+N)/(M-kLf/E)*(T0<0)*(E<0))
         
         Tg=np.linalg.solve(thematrix,rightside)
-print('Tg')
-print(Tg[0:4])
-print(Tg[-4:])
+print 'Tg'
+print Tg[0:4]
+print Tg[-4:]
 
 # In[5]:
 #%compute ice edge
@@ -165,7 +166,7 @@ Tpole_sept=Tpole_sept.reshape(int(years-spinup))
 Tpole_mar=Tpole_mar.reshape(int(years-spinup))
 
 # In[10]:
-print('now plot it')
+print 'now plot it'
 #%plot summer/winter ice areas and temperatures at the pole
 #plt.figure(1)
 plt.subplot(2, 1, 1)

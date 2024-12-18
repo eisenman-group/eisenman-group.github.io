@@ -56,8 +56,8 @@ S = S0-S2*x**2 # insolation [WE15 eq. (3) with S_1 = 0]
 aw = a0-a2*x**2 # open water albedo
  
 T = 10*np.ones(x.shape) # initial condition (constant temp. 10C everywhere)
-allT = np.zeros([int(dur*nt),n])
-t = np.linspace(0,dur,int(dur*nt))
+allT = np.zeros([dur*nt,n])
+t = np.linspace(0,dur,dur*nt)
  
 I = np.identity(n)
 invMat = np.linalg.inv(I+dt/cw*(B*I-diffop))
@@ -66,22 +66,22 @@ invMat = np.linalg.inv(I+dt/cw*(B*I-diffop))
 # over x using central difference (through diffop)
  
 for i in range(0,int(dur*nt)):
-    a = aw*(T>0)+ai*(T<0) # WE15, eq.4
-    C = a*S-A+F
-    T0 = T+dt/cw*C
-    # Governing equation [cf. WE15, eq. (2)]:
-    # T(n+1) = T(n) + dt*(dT(n+1)/dt), with c_w*dT/dt=(C-B*T+diffop*T)
-    # -> T(n+1) = T(n) + dt/cw*[C-B*T(n+1)+diff_op*T(n+1)]
-    # -> T(n+1) = inv[1+dt/cw*(1+B-diff_op)]*(T(n)+dt/cw*C)
-    T = np.dot(invMat,T0)
-    allT[i,:]=T
+a = aw*(T>0)+ai*(T<0) # WE15, eq.4
+C = a*S-A+F
+T0 = T+dt/cw*C
+# Governing equation [cf. WE15, eq. (2)]:
+# T(n+1) = T(n) + dt*(dT(n+1)/dt), with c_w*dT/dt=(C-B*T+diffop*T)
+# -> T(n+1) = T(n) + dt/cw*[C-B*T(n+1)+diff_op*T(n+1)]
+# -> T(n+1) = inv[1+dt/cw*(1+B-diff_op)]*(T(n)+dt/cw*C)
+T = np.dot(invMat,T0)
+allT[i,:]=T
  
 fig = plt.figure(1)
 fig.suptitle('EBM_fast_WE15')
 plt.subplot(121)
 plt.plot(t,allT)
 plt.xlabel('t (years)')
-plt.ylabel('T (in °C)')
+plt.ylabel('T (in $^\circ$C)')
 plt.subplot(122)
 plt.plot(x,T)
 plt.xlabel('x')

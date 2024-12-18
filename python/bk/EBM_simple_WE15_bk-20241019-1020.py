@@ -3,13 +3,14 @@
 # Reference: "How Model Complexity Influences Sea Ice Stability",
 # T.J.W. Wagner & I. Eisenman, J Clim (2015)
 #
-# WE15_EBM_fast.m:
+# WE15_EBM_simple.m:
 # This code describes the EBM as discussed in Sec. 2b of the article above,
 # hereafter WE15. Here we use central difference spatial integration and
-# Implicit Euler time stepping.
+# time stepping with MATLAB's ode45.
 #
-# The code WE15_EBM_simple.m, on the other hand, uses a simpler formulation
-# of the diffusion operator and time stepping with Matlab's ode45.
+# The code WE15_EBM_fast.m, on the other hand, uses a faster, but more
+# complicated formulation of the diffusion operator and Implicit Euler time
+# stepping.
 #
 # Parameters are as described in WE15, table 1. Note that we do not include
 # ocean heat flux convergence or a seasonal cylce in the forcing
@@ -21,9 +22,9 @@
 #
 # Till Wagner & Ian Eisenman, Mar 15
 # tjwagner@ucsd.edu or eisenman@ucsd.edu
-#
-# -------------------------------------------------------------------------
+##-------------------------------------------------------------------------
 import numpy as np
+from scipy.integrate import odeint
 import matplotlib.pyplot as plt
 ##Model parameters (WE15, Table 1 and Section 2d) -------------------------
 D = 0.6 # diffusivity for heat transport (W m^-2 K^-1)
@@ -38,52 +39,37 @@ ai = 0.4 # co-albedo where there is sea ice
 F = 0 # radiative forcing (W m^-2)
 # -------------------------------------------------------------------------
 n = 50 # grid resolution (number of points between equator and pole)
-nt = .5
-dur = 100
-dt = 1/nt
-# Spatial Grid ---------------------------------------------------------
-dx = 1.0/n # grid box width
-x = np.arange(dx/2,1+dx/2,dx) #native grid
-xb = np.arange(dx,1,dx)
-# Diffusion Operator (WE15, Appendix A) -----------------------------------
-lam = D/dx**2*(1-xb**2)
-L1=np.append(0, -lam)
-L2=np.append(-lam, 0)
-L3=-L1-L2
-diffop = - np.diag(L3) - np.diag(L2[:n-1],1) - np.diag(L1[1:n],-1);
- 
+x = np.linspace(0,1,n)
+dx = 1.0/(n-1)
 S = S0-S2*x**2 # insolation [WE15 eq. (3) with S_1 = 0]
 aw = a0-a2*x**2 # open water albedo
+# ODE with spatial finite differencing-------------------------------------
+def odefunc(T,t):
+alpha = aw*(T>0)+ai*(T<0)
+C = alpha*S-A+F
+Tdot = np.zeros(x.shape)
+# solve c_wdT/dt = D(1-x^2)d^
+for i in range(1,n-1):
+Tdot[i]=(D/dx**2)*(1-x[i]**2)*(T[i+1]-2*T[i]+T[i-1])-(D*x[i]/dx)*(T[i+1]-T[i-1])
+# solve c_w dT/dt = D (1-x^2) d^2 T/dx^2 - 2 x D dT/dx + C - B T [cf. WE15 eq. (2)]
+# use central difference
+Tdot[0] = D*2*(T[1]-T[0])/dx**2
+Tdot[-1] = -D*2*x[-1]*(T[-1]-T[-2])/dx
+f = (Tdot+C-B*T)/cw
+return f
  
-T = 10*np.ones(x.shape) # initial condition (constant temp. 10C everywhere)
-allT = np.zeros([int(dur*nt),n])
-t = np.linspace(0,dur,int(dur*nt))
- 
-I = np.identity(n)
-invMat = np.linalg.inv(I+dt/cw*(B*I-diffop))
- 
-# integration over time using implicit difference and
-# over x using central difference (through diffop)
- 
-for i in range(0,int(dur*nt)):
-    a = aw*(T>0)+ai*(T<0) # WE15, eq.4
-    C = a*S-A+F
-    T0 = T+dt/cw*C
-    # Governing equation [cf. WE15, eq. (2)]:
-    # T(n+1) = T(n) + dt*(dT(n+1)/dt), with c_w*dT/dt=(C-B*T+diffop*T)
-    # -> T(n+1) = T(n) + dt/cw*[C-B*T(n+1)+diff_op*T(n+1)]
-    # -> T(n+1) = inv[1+dt/cw*(1+B-diff_op)]*(T(n)+dt/cw*C)
-    T = np.dot(invMat,T0)
-    allT[i,:]=T
+T0 = 10*np.ones(x.shape) # initial condition (constant temp. 10C everywhere)
+time = np.linspace(0.0,30.0,1000) # time span in years
+sol = odeint(odefunc,T0,time) # solve
  
 fig = plt.figure(1)
-fig.suptitle('EBM_fast_WE15')
+fig.suptitle('EBM_simple_WE15')
 plt.subplot(121)
-plt.plot(t,allT)
+plt.plot(time,sol)
 plt.xlabel('t (years)')
-plt.ylabel('T (in °C)')
+plt.ylabel('T (in $^\circ$C)')
 plt.subplot(122)
-plt.plot(x,T)
+plt.plot(x,sol[-1,:])
 plt.xlabel('x')
 plt.show()
  

@@ -1,4 +1,4 @@
-# Till Wagner's python version (edited by Ian Eisenman):
+# Till Wagner's python version:
 #
 # Reference: "How Model Complexity Influences Sea Ice Stability",
 # T.J.W. Wagner & I. Eisenman, J Clim 28,10 (2015)
@@ -82,25 +82,25 @@ Tg = T; E = cw*T;
 #Integration (see WE15_NumericIntegration.pdf)----------------------------
 #Loop over Years ---------------------------------------------------------
 for years in range(0,dur):
-    #Loop within One Year-------------------------------------------------
-    for i in range(0,int(nt)):
-        m = m+1
-        #store 100 timesteps per year
-        if (p+1)*10 == m:
-            p = p+1
-            E100[:,p] = E
-            T100[:,p] = T
-        #forcing
-        alpha = aw*(E>0) + ai*(E<0) #WE15, eq.4
-        C = alpha*S[i,:]+cg_tau*Tg-A
-        #surface temperature
-        T0 = C/(M-kLf/E) #WE15, eq.A3
-        T = E/cw*(E>=0)+T0*(E<0)*(T0<0); #WE15, eq.9
-        #Forward Euler on E
-        E = E+dt*(C-M*T+Fb); #WE15, eq.A2
-        #Implicit Euler on Tg
-        Tg = np.linalg.solve(kappa-np.diag(dc/(M-kLf/E)*(T0<0)*(E<0)), 
-                             Tg+(dt_tau*(E/cw*(E>=0)+(ai*S[i+1,:]-A)/(M-kLf/E)*(T0<0)*(E<0)))) #WE15, eq.A1
+#Loop within One Year-------------------------------------------------
+for i in range(0,int(nt)):
+m = m+1
+#store 100 timesteps per year
+if (p+1)*10 == m:
+p = p+1
+E100[:,p] = E
+T100[:,p] = T
+#forcing
+alpha = aw*(E>0) + ai*(E<0) #WE15, eq.4
+C = alpha*S[i,:]+cg_tau*Tg-A
+#surface temperature
+T0 = C/(M-kLf/E) #WE15, eq.A3
+T = E/cw*(E>=0)+T0*(E<0)*(T0<0); #WE15, eq.9
+#Forward Euler on E
+E = E+dt*(C-M*T+Fb); #WE15, eq.A2
+#Implicit Euler on Tg
+Tg = np.linalg.solve(kappa-np.diag(dc/(M-kLf/E)*(T0<0)*(E<0)),
+Tg+(dt_tau*(E/cw*(E>=0)+(ai*S[i+1,:]-A)/(M-kLf/E)*(T0<0)*(E<0)))) #WE15, eq.A1
 #-------------------------------------------------------------------------
 #output only converged, final year
 tfin = np.linspace(0,1,100)
@@ -115,15 +115,15 @@ summer = 76 #time of warmest <T>
 xi = np.zeros(100)
 #if isempty(find(E<0,1))==0:
 for j in range(0,len(tfin)):
-    E = Efin[:,j]
-    if any(E<0):
-        ice = np.where(E<0)[0]
-        xi[j] = x[ice[0]];
-    else:
-        xi[j] = max(x);
+E = Efin[:,j]
+if any(E<0):
+ice = np.where(E<0)[0]
+xi[j] = x[ice[0]];
+else:
+xi[j] = max(x);
  
 import matplotlib.pyplot as plt
-
+plt.figure(2)
 #plot enthalpy (Fig 2a)
 plt.subplot(141)
 clevsE = np.append(np.arange(-40,20,20),np.arange(50,350,50))
@@ -134,7 +134,7 @@ plt.plot(tfin,xi,'k')
 plt.xlabel('t (final year)')
 plt.ylabel('x')
 plt.title(r'E (J m$^{-2}$)')
-
+ 
 #plot temperature (Fig 2b)
 plt.subplot(142)
 clevsT = np.arange(-30.001,35.,5.)
@@ -147,8 +147,8 @@ plt.plot(tfin,xi,'k')
 plt.contour(tfin,x,Tfin,[-0.001],colors='r',linestyles='-')
 plt.xlabel('t (final year)')
 plt.ylabel('x')
-plt.title(r'T (°C)')
-
+plt.title(r'T ($^\\circ$C)')
+ 
 #plot the ice thickness (Fig 2c)
 plt.subplot(1,4,3)
 clevsh = np.arange(0.00001,4.5,.5)
@@ -169,7 +169,7 @@ Summer, = plt.plot(x,Tfin[:,summer],'k--',label='summer')
 Winter, = plt.plot(x,Tfin[:,winter],'k',label='winter')
 plt.plot([0,1],[0,0],'k')
 plt.xlabel('x')
-plt.ylabel(r'T (°C)')
+plt.ylabel(r'T ($^\\circ$C)')
 plt.legend(handles = [Summer,Winter],loc=0)
  
 #plot ice thickness profiles (Fig 2e)
@@ -194,6 +194,4 @@ xideg = np.degrees(np.arcsin(xi));
 plt.plot(tfin,xideg,'k-')
 plt.ylim([0,90])
 plt.xlabel('t (final year)')
-plt.ylabel(r'$θ_i$ (deg)');
-
-plt.show()
+plt.ylabel(r'$\\theta_i$ (deg)');
